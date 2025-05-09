@@ -10,9 +10,11 @@ import { X, Send, Loader2, ChevronUp, ChevronDown } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
+import { cn } from "@/lib/utils"
 
 interface ChatInterfaceProps {
   onClose: () => void
+  className?: string
 }
 
 // Demo message type to mimic the AI SDK's message format
@@ -68,7 +70,7 @@ const renderMessage = (content: string, isUser: boolean) => {
   ))
 }
 
-export default function ChatInterface({ onClose }: ChatInterfaceProps) {
+export default function ChatInterface({ onClose, className }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -162,13 +164,13 @@ export default function ChatInterface({ onClose }: ChatInterfaceProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
-      className="fixed inset-x-0 bottom-0 z-50 
+      className={cn("fixed inset-x-0 bottom-0 z-50 
                  w-[100%] sm:w-[400px] md:w-[450px]
                  sm:right-8 sm:left-auto
-                 m-0 sm:m-4"
+                 m-0 sm:m-4", className)}
     >
-      <Card className="overflow-hidden shadow-xl border-t sm:border border-orange-200 rounded-none sm:rounded-lg">
-        {/* Header */}
+      <Card className="overflow-hidden shadow-xl border-t sm:border border-orange-200 rounded-none sm:rounded-lg bg-transparent">
+        {/* Header with background */}
         <div className="bg-orange-600 text-white p-3 sm:p-4 flex justify-between items-center">
           <div className="flex items-center space-x-2 sm:space-x-3">
             <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-orange-300">
@@ -194,7 +196,7 @@ export default function ChatInterface({ onClose }: ChatInterfaceProps) {
 
         {!isMinimized && (
           <>
-            {/* Chat area */}
+            {/* Chat area with background */}
             <div className="h-[60vh] sm:h-96 overflow-y-auto p-4 bg-white">
               {messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center text-gray-700">

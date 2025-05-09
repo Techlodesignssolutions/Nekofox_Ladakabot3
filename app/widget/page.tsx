@@ -5,6 +5,8 @@ import ChatInterface from "@/components/chat-interface"
 
 export default function WidgetPage() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isChatVisible, setIsChatVisible] = React.useState(false);
+  const [isMinimized, setIsMinimized] = React.useState(false);
 
   // Function to close the widget by sending a message to the parent
   const handleClose = () => {
@@ -36,9 +38,39 @@ export default function WidgetPage() {
     };
   }, []);
 
+  // When the avatar is clicked to open the chat
+  const handleAvatarClick = () => {
+    setIsChatVisible(true);
+    if (window.parent) {
+      window.parent.postMessage({ type: 'expand' }, '*');
+    }
+  };
+
+  // In your ChatInterface component
+  const toggleMinimize = () => {
+    const newState = !isMinimized;
+    setIsMinimized(newState);
+    
+    if (window.parent) {
+      window.parent.postMessage({ 
+        type: newState ? 'collapse' : 'expand'
+      }, '*');
+    }
+  };
+
   return (
-    <div className="widget-container" ref={containerRef}>
-      <ChatInterface onClose={handleClose} />
+    <div className="widget-container" 
+         ref={containerRef}
+         style={{ 
+           background: 'transparent',
+           pointerEvents: 'none'
+         }}>
+      <ChatInterface 
+        onClose={handleClose} 
+        className="pointer-events-auto"
+        isMinimized={isMinimized}
+        toggleMinimize={toggleMinimize}
+      />
     </div>
   )
 } 
