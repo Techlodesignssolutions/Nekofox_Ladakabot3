@@ -15,6 +15,8 @@ import { cn } from "@/lib/utils"
 interface ChatInterfaceProps {
   onClose: () => void
   className?: string
+  isMinimized?: boolean
+  toggleMinimize?: () => void
 }
 
 // Demo message type to mimic the AI SDK's message format
@@ -70,13 +72,25 @@ const renderMessage = (content: string, isUser: boolean) => {
   ))
 }
 
-export default function ChatInterface({ onClose, className }: ChatInterfaceProps) {
+export default function ChatInterface({ 
+  onClose, 
+  className, 
+  isMinimized: propIsMinimized, 
+  toggleMinimize: propToggleMinimize 
+}: ChatInterfaceProps) {
+  // Use the prop if provided, otherwise use local state
+  const [localIsMinimized, setLocalIsMinimized] = useState(false)
+  const isMinimized = propIsMinimized !== undefined ? propIsMinimized : localIsMinimized
+  
+  // Use the prop function if provided, otherwise use local function
+  const toggleMinimize = propToggleMinimize || (() => {
+    setLocalIsMinimized(!localIsMinimized)
+  })
+  
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const [isMinimized, setIsMinimized] = useState(false)
-  const messageIdCounter = useRef(0)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -86,9 +100,19 @@ export default function ChatInterface({ onClose, className }: ChatInterfaceProps
     scrollToBottom()
   }, [messages, isLoading])
 
-  const toggleMinimize = () => {
-    setIsMinimized(!isMinimized)
-  }
+  useEffect(() => {
+    // If we're in the minimized state, add a click handler to the avatar
+    if (isMinimized) {
+      const avatarElement = document.querySelector('.avatar-element'); // Add a class to your avatar
+      if (avatarElement) {
+        const handleClick = () => {
+          toggleMinimize();
+        };
+        avatarElement.addEventListener('click', handleClick);
+        return () => avatarElement.removeEventListener('click', handleClick);
+      }
+    }
+  }, [isMinimized, toggleMinimize]);
 
   // Demo responses
   const demoResponses = [
