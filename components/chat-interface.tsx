@@ -91,6 +91,7 @@ export default function ChatInterface({
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const messageIdCounter = useRef(0)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -99,20 +100,6 @@ export default function ChatInterface({
   useEffect(() => {
     scrollToBottom()
   }, [messages, isLoading])
-
-  useEffect(() => {
-    // If we're in the minimized state, add a click handler to the avatar
-    if (isMinimized) {
-      const avatarElement = document.querySelector('.avatar-element'); // Add a class to your avatar
-      if (avatarElement) {
-        const handleClick = () => {
-          toggleMinimize();
-        };
-        avatarElement.addEventListener('click', handleClick);
-        return () => avatarElement.removeEventListener('click', handleClick);
-      }
-    }
-  }, [isMinimized, toggleMinimize]);
 
   // Demo responses
   const demoResponses = [
