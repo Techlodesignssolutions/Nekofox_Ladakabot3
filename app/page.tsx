@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef } from "react"
 import ChatInterface from "@/components/chat-interface"
 import Avatar from "@/components/avatar"
 import { motion } from "framer-motion"
@@ -17,33 +17,6 @@ export default function Home() {
       window.parent.postMessage({ type: 'close' }, '*')
     }
   }
-
-  // Send resize message to parent when content changes
-  useEffect(() => {
-    // Check if we're in an iframe
-    const isInIframe = window !== window.parent
-    if (!isInIframe) return
-
-    const resizeObserver = new ResizeObserver(entries => {
-      if (window.parent && containerRef.current) {
-        const height = containerRef.current.scrollHeight
-        window.parent.postMessage({ 
-          type: 'resize', 
-          height: height 
-        }, '*')
-      }
-    })
-    
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current)
-    }
-    
-    return () => {
-      if (containerRef.current) {
-        resizeObserver.disconnect()
-      }
-    }
-  }, [])
 
   const handleOpen = () => {
     setIsChatVisible(true)
