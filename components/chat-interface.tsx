@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card"
 import { X, Send, Loader2, ChevronUp, ChevronDown } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 interface ChatInterfaceProps {
@@ -47,14 +47,9 @@ const linkify = (text: string) => {
 
 // Animated message chunk
 const MessageChunk = ({ content, delay }: { content: string, delay: number }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay }}
-    className="mb-2"
-  >
+  <div className="mb-2">
     {linkify(content)}
-  </motion.div>
+  </div>
 )
 
 // Update the message rendering
@@ -171,14 +166,8 @@ export default function ChatInterface({
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 20 }}
-      className={cn("fixed inset-x-0 bottom-0 z-50 
-                 w-[100%] sm:w-[400px] md:w-[450px]
-                 sm:right-8 sm:left-auto
-                 m-0 sm:m-4", className)}
+    <div
+      className={cn("fixed inset-x-0 bottom-0 z-50 w-[100%] sm:w-[400px] md:w-[450px] sm:right-8 sm:left-auto m-0 sm:m-4", className)}
     >
       <Card className="overflow-hidden shadow-xl border-t sm:border border-orange-200 rounded-none sm:rounded-lg bg-transparent">
         {/* Header with background */}
@@ -357,6 +346,6 @@ export default function ChatInterface({
           }
         }
       `}</style>
-    </motion.div>
+    </div>
   )
 }
